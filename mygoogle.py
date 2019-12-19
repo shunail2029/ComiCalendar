@@ -28,3 +28,10 @@ def build_service():
 
     service = build('calendar', 'v3', credentials=creds)
     return service
+
+def get_event_list(service):
+    # Call the Calendar API
+    events_result = service.events().list(calendarId='3goiblvs1uhkoghhbmt9t8miug@group.calendar.google.com',
+                                          singleEvents=True,
+                                          orderBy='startTime').execute()
+    return events_result.get('items', [])
