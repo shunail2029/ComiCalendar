@@ -5,6 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
+calendar_id = '3goiblvs1uhkoghhbmt9t8miug@group.calendar.google.com'
 
 def build_service():
     creds = None
@@ -30,8 +31,35 @@ def build_service():
     return service
 
 def get_event_list(service):
-    # Call the Calendar API
-    events_result = service.events().list(calendarId='3goiblvs1uhkoghhbmt9t8miug@group.calendar.google.com',
-                                          singleEvents=True,
-                                          orderBy='startTime').execute()
+    events_result = service.events().list(calendarId=calendar_id, singleEvents=True, orderBy='startTime').execute()
+    if events_result:
+        print('got event list')
+    else:
+        print('failed to get event list')
     return events_result.get('items', [])
+
+def insert_event(service, event_body):
+    res = service.events().insert(calendarId=calendar_id, body=event_body).execute()
+    return res
+
+def update_event(service, event_id, event_body):
+    res = service.events().update(calendarId=calendar_id, eventId=event_id, body=event_body).execute()
+    return res
+
+def make_event_body(summary, date, description):
+    event = {
+        'summary': summary,
+        'description': description,
+        'start': {
+            'date': date,
+        },
+        'end': {
+            'date': date,
+        },
+        'reminder': {
+            'useDefault': True,
+        },
+        'transparency': 'transparent',
+    }
+
+    return event
