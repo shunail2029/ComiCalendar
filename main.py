@@ -77,6 +77,13 @@ def main():
             s = re.split('[年月日]', text)
             release_date = s[0] + '-' + s[1] + '-' + s[2]
 
+        # check comic name is same as one in web site
+        text = soup.find(class_='iteminfo lead')
+        text = text.get_text()
+        if comic_title not in text:
+            print(comic_title + ' is different name from one in web site')
+            failed_events += comic_title + ' is different name from one in web site\n'
+
         # set prefix '?' to title
         if release_is_vague:
             event_title = '?' + event_title.strip('?')
