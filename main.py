@@ -1,9 +1,14 @@
 import datetime
 
-import googleauth
+import mygoogleauth
+import myweb
 
 def main():
-    service = googleauth.build_service()
+    # build service of google calender
+    service = mygoogleauth.build_service()
+
+    # get comic sales list
+    # sales_list = myweb.get_sales_list()
 
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
