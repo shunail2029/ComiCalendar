@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import mygoogle
+import myline
 
 def main():
     # build service of google calendar
@@ -89,6 +90,8 @@ def main():
             event_title = '?' + event_title.strip('?')
         elif release_is_undeclared:
             event_title = '??' + event_title.strip('?')
+        else:
+            event_title = event_title.strip('?')
 
         # check update of release date
         if event_date != release_date:
@@ -132,7 +135,9 @@ def main():
         message += '-- failure information --\n' + failed_events.strip('\n')
     if not message:
         message = '【定期】今日も順調ですね！！'
-    print(message)
+
+    line_access_token = myline.get_access_token()
+    myline.send_broadcast(line_access_token, message.strip('\n'))
 
 if __name__ == '__main__':
     main()

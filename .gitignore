@@ -130,6 +130,6 @@ dmypy.json
 
 .vscode
 .venv
-credentials.json
-token.pickle
+*credentials.json
+*token.pickle
 mylist.txt
