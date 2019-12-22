@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import mygoogle
 import myline
 
-def main():
+def update_calendar():
     # build service of google calendar
     service = mygoogle.build_service()
 
@@ -139,5 +139,5 @@ def main():
     line_access_token = myline.get_access_token()
     myline.send_broadcast(line_access_token, message.strip('\n'))
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    update_calendar()
