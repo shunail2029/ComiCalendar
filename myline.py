@@ -55,7 +55,3 @@ def send_broadcast(access_token, message):
         print('sent message')
     else:
         print('failed to send message')
-
-if __name__ == "__main__":
-    token = get_access_token()
-    send_broadcast(token, 'Hello!!')
