@@ -2,10 +2,10 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 import mycalendar
 
-sched = BlockingScheduler()
+scheduler = BlockingScheduler(time='Asia/Tokyo')
 
-@sched.scheduled_job('cron', hour=18)
+@scheduler.scheduled_job('cron', hour=18)
 def scheduled_job():
     mycalendar.update_calendar()
 
-sched.start()
+scheduler.start()
