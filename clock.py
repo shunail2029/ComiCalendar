@@ -4,7 +4,7 @@ import mycalendar
 
 scheduler = BlockingScheduler(time='Asia/Tokyo')
 
-@scheduler.scheduled_job('cron', hour=18)
+@scheduler.scheduled_job('cron', hour=9)
 def scheduled_job():
     mycalendar.update_calendar()
 
