@@ -136,8 +136,7 @@ def update_calendar():
     if not message:
         message = '【定期】今日も順調ですね！！'
 
-    line_access_token = myline.get_access_token()
-    myline.send_broadcast(line_access_token, message.strip('\n'))
+    myline.send_message(message.strip('\n'))
 
 if __name__ == "__main__":
     update_calendar()

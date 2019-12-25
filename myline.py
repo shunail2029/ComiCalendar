@@ -1,56 +1,18 @@
-import json
-import os.path
+import os
 import requests
 
-def get_access_token():
-    token = ''
-    creds = None
-    if os.path.exists('linecredentials.json'):
-        with open('linecredentials.json', 'r') as f:
-            creds = json.load(f)
+LINE_ACCESS_TOKEN = os.environ['LINE_ACCESS_TOKEN']
 
-    if not creds:
-        print('failed to load linecredentials.json')
-        return ''
-
-    API_URL = 'https://api.line.me/v2/oauth/accessToken'
+def send_message(message):
+    API_URL = 'https://notify-api.line.me/api/notify'
     headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Authorization': 'Bearer ' + LINE_ACCESS_TOKEN
     }
     payload = {
-        'grant_type': 'client_credentials',
-        'client_id': creds["channel_id"],
-        'client_secret': creds["channel_secret"]
+        'message': '\n' + message
     }
 
-    r = requests.post(url=API_URL, data=payload, headers=headers)
-    if r.status_code == 200:
-        print('got line access token')
-        token = r.json()["access_token"]
-    else:
-        print('failed to get line access token')
-    return token
-
-def send_broadcast(access_token, message):
-    if not access_token:
-        print('cannot send message without access token')
-        return
-
-    API_URL = 'https://api.line.me/v2/bot/message/broadcast'
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token
-    }
-    payload = {
-        'messages': [
-            {
-                'type': 'text',
-                'text': message
-            }
-        ]
-    }
-
-    r = requests.post(url=API_URL, data=json.dumps(payload), headers=headers)
+    r = requests.post(url=API_URL, headers=headers, params=payload)
     if r.status_code == 200:
         print('sent message')
     else:
