@@ -138,4 +138,4 @@ def update_calendar(event, context):
     myline.send_message(message.strip('\n'))
 
 if __name__ == "__main__":
-    update_calendar()
+    update_calendar(0, 0)
