@@ -131,6 +131,3 @@ dmypy.json
 .vscode
 .venv
 .env
-*credentials.json
-*token.pickle
-mylist.txt
