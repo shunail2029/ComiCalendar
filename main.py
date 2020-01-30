@@ -3,8 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-import mygoogle
-import myline
+from mypackage import *
 
 def update_calendar():
     # build service of google calendar
