@@ -27,7 +27,7 @@ def build_service():
         with open('googletoken.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
-    service = build('calendar', 'v3', credentials=creds)
+    service = build('calendar', 'v3', credentials=creds, cache_discovery=False)
     return service
 
 def get_event_list(service):
