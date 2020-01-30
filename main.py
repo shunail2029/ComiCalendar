@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 from mypackage import *
 
-def update_calendar():
+def update_calendar(event, context):
     # build service of google calendar
     service = mygoogle.build_service()
 
