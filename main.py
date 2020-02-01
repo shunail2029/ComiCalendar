@@ -3,7 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from mypackage import *
+from mypackage import mygoogle, myline
 
 def update_calendar(event, context):
     # build service of google calendar

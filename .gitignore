@@ -130,4 +130,5 @@ dmypy.json
 
 .vscode
 .venv
-.env
+credentials.json
+googletoken.pickle

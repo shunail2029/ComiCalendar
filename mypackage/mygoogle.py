@@ -5,7 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
-calendar_id = '3goiblvs1uhkoghhbmt9t8miug@group.calendar.google.com'
+calendar_id = os.environ['GOOGLE_CALENDAR_ID']
 
 def build_service():
     creds = None
