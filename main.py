@@ -43,7 +43,8 @@ def update_calendar(event, context):
         url = event_description.split('\n')[2]
         r = requests.get(url)
         if not r:
-            print('failed to get info from ' + url)
+            print('failed to get info about ' + event_title + ' from ' + url)
+            continue
 
         # parse html
         soup = BeautifulSoup(r.text, 'html.parser')
