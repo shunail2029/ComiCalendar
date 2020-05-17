@@ -35,10 +35,6 @@ def update_calendar(event, context):
             else:
                 event_is_vague = True
 
-        # skip cirus+
-        if event_title == 'citrus+':
-            continue
-
         # get html from url in description
         url = event_description.split('\n')[2]
         r = requests.get(url)
