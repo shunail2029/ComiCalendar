@@ -7,6 +7,7 @@ from google.auth.transport.requests import Request
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 calendar_id = os.environ['GOOGLE_CALENDAR_ID']
 
+
 def build_service():
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -30,21 +31,32 @@ def build_service():
     service = build('calendar', 'v3', credentials=creds, cache_discovery=False)
     return service
 
+
 def get_event_list(service):
-    events_result = service.events().list(calendarId=calendar_id, singleEvents=True, orderBy='startTime').execute()
+    events_result = service.events().list(
+        calendarId=calendar_id,
+        singleEvents=True,
+        orderBy='startTime').execute()
     if events_result:
         print('got event list')
     else:
         print('failed to get event list')
     return events_result.get('items', [])
 
+
 def insert_event(service, event_body):
-    res = service.events().insert(calendarId=calendar_id, body=event_body).execute()
+    res = service.events().insert(
+        calendarId=calendar_id, body=event_body).execute()
     return res
 
+
 def update_event(service, event_id, event_body):
-    res = service.events().update(calendarId=calendar_id, eventId=event_id, body=event_body).execute()
+    res = service.events().update(
+        calendarId=calendar_id,
+        eventId=event_id,
+        body=event_body).execute()
     return res
+
 
 def make_event_body(summary, date, description):
     event = {

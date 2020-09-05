@@ -7,6 +7,8 @@ current_month_url = 'https://honto.jp/netstore/calender/old.html'
 next_month_url = 'https://honto.jp/netstore/calender.html'
 
 # change date format from mm月dd日 to yyyy-mm-dd
+
+
 def change_date_format(date):
     s = re.split('[月日]', date)
     month = s[0]
@@ -19,6 +21,7 @@ def change_date_format(date):
         year += 1
 
     return str(year) + '-' + month.zfill(2) + '-' + day.zfill(2)
+
 
 def get_sales_list():
     sales_list = []
@@ -40,6 +43,8 @@ def get_sales_list():
             info = book.find_all('td')
             if not info:
                 continue
-            sales_list.append([change_date_format(info[0].get_text()), info[1].get_text().replace('\u3000', ' ')])
+            sales_list.append([change_date_format(
+                info[0].get_text()),
+                info[1].get_text().replace('\u3000', ' ')])
 
     return sales_list

@@ -3,6 +3,7 @@ import requests
 
 LINE_ACCESS_TOKEN = os.environ['LINE_ACCESS_TOKEN']
 
+
 def send_message(message):
     API_URL = 'https://notify-api.line.me/api/notify'
     headers = {

@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 from mypackage import mygoogle, myline
 
+
 def update_calendar(event, context):
     # build service of google calendar
     service = mygoogle.build_service()
@@ -13,7 +14,8 @@ def update_calendar(event, context):
     events = mygoogle.get_event_list(service)
 
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
-    today = str(now.year).zfill(4) + '-' + str(now.month).zfill(2) + '-' + str(now.day).zfill(2)
+    today = str(now.year).zfill(4) + '-' + \
+        str(now.month).zfill(2) + '-' + str(now.day).zfill(2)
     message = ''
     remained_events = ''
     updated_events = ''
@@ -61,7 +63,8 @@ def update_calendar(event, context):
                 else:
                     text = text.get_text()
                     if '未定' in text:
-                        release_date = str(now.year + 1).zfill(4) + '-' + str(12) + '-' + str(31)
+                        release_date = str(
+                            now.year + 1).zfill(4) + '-' + str(12) + '-' + str(31)
                         release_is_undeclared = True
                     else:
                         print('??? about ' + comic_title)
@@ -92,9 +95,12 @@ def update_calendar(event, context):
         # check update of release date
         if event_date != release_date:
             if event_date <= today:
-                remained_events += event_date + ' ' + event_title.strip('?') + '\n'
-                if len([lis for lis in events if event_title.strip('?') == lis['summary'].strip('?')]) == 1:
-                    new_event = mygoogle.make_event_body(event_title, release_date, event_description)
+                remained_events += event_date + ' ' + \
+                    event_title.strip('?') + '\n'
+                if len([lis for lis in events if event_title.strip(
+                        '?') == lis['summary'].strip('?')]) == 1:
+                    new_event = mygoogle.make_event_body(
+                        event_title, release_date, event_description)
                     res = mygoogle.insert_event(service, new_event)
                     if res:
                         print('inserted ' + event_title)
@@ -103,7 +109,8 @@ def update_calendar(event, context):
                         print('failed to insert ' + event_title)
                         failed_events += 'failed to insert ' + event_title + '\n'
             else:
-                new_event = mygoogle.make_event_body(event_title, release_date, event_description)
+                new_event = mygoogle.make_event_body(
+                    event_title, release_date, event_description)
                 res = mygoogle.update_event(service, event_id, new_event)
                 if res:
                     print('updated ' + event_title)
@@ -112,7 +119,8 @@ def update_calendar(event, context):
                     print('failed to insert ' + event_title)
                     failed_events += 'failed to update ' + event_title + '\n'
         elif event_is_vague != release_is_vague or event_is_undeclared != release_is_undeclared:
-            new_event = mygoogle.make_event_body(event_title, release_date, event_description)
+            new_event = mygoogle.make_event_body(
+                event_title, release_date, event_description)
             res = mygoogle.update_event(service, event_id, new_event)
             if res:
                 print('updated ' + event_title)
@@ -133,6 +141,7 @@ def update_calendar(event, context):
         message = '【定期】今日も順調ですね！！'
 
     myline.send_message(message.strip('\n'))
+
 
 if __name__ == "__main__":
     update_calendar(0, 0)
