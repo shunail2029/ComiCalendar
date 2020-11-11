@@ -30,10 +30,10 @@ def update_calendar(event, context):
         event_id = event['id']
 
         event_is_vague = False
-        event_is_undeclared = False
+        event_is_declared = True
         if event_title[0] == '?':
             if event_title[1] == '?':
-                event_is_undeclared = True
+                event_is_declared = False
             else:
                 event_is_vague = True
 
@@ -50,30 +50,25 @@ def update_calendar(event, context):
         # find date in html
         release_date = ''
         release_is_vague = False
-        release_is_undeclared = False
+        release_is_declared = True
         text = soup.find(class_='text-success')
         if not text:
             text = soup.find(class_='text-warning')
             if not text:
-                text = soup.find(class_='iteminfo lead')
-                if not text:
-                    print('cannot get any info of ' + comic_title + '.')
-                    failed_events += 'cannot get any info of ' + comic_title + '\n'
-                    continue
-                else:
-                    text = text.get_text()
-                    if '未定' in text:
-                        release_date = str(
-                            now.year + 1).zfill(4) + '-' + str(12) + '-' + str(31)
-                        release_is_undeclared = True
-                    else:
-                        print('??? about ' + comic_title)
-                        failed_events += '??? about ' + comic_title + '\n'
-                        continue
+                print('cannot get any info of ' + comic_title + '.')
+                failed_events += 'cannot get any info of ' + comic_title + '\n'
+                continue
             else:
-                release_is_vague = True
-        if not release_is_undeclared:
+                text = text.get_text()
+                if text.startswith('20'):
+                    release_is_vague = True
+                else:
+                    release_date = str(
+                        now.year + 1).zfill(4) + '-' + str(12) + '-' + str(31)
+                    release_is_declared = False
+        else:
             text = text.get_text()
+        if release_is_declared:
             s = re.split('[年月日]', text)
             release_date = s[0] + '-' + s[1] + '-' + s[2]
 
@@ -87,7 +82,7 @@ def update_calendar(event, context):
         # set prefix '?' to title
         if release_is_vague:
             event_title = '?' + event_title.strip('?')
-        elif release_is_undeclared:
+        elif not release_is_declared:
             event_title = '??' + event_title.strip('?')
         else:
             event_title = event_title.strip('?')
@@ -118,7 +113,7 @@ def update_calendar(event, context):
                 else:
                     print('failed to insert ' + event_title)
                     failed_events += 'failed to update ' + event_title + '\n'
-        elif event_is_vague != release_is_vague or event_is_undeclared != release_is_undeclared:
+        elif event_is_vague != release_is_vague or event_is_declared != release_is_declared:
             new_event = mygoogle.make_event_body(
                 event_title, release_date, event_description)
             res = mygoogle.update_event(service, event_id, new_event)
