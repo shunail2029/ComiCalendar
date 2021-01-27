@@ -52,13 +52,11 @@ def update_calendar(event, context):
         release_is_vague = False
         release_is_declared = True
         text = soup.find(class_='text-success')
-        if not text:
+        if text:
+            text = text.get_text()
+        else:
             text = soup.find(class_='text-warning')
-            if not text:
-                print('cannot get any info of ' + comic_title + '.')
-                failed_events += 'cannot get any info of ' + comic_title + '\n'
-                continue
-            else:
+            if text:
                 text = text.get_text()
                 if text.startswith('20'):
                     release_is_vague = True
@@ -66,8 +64,12 @@ def update_calendar(event, context):
                     release_date = str(
                         now.year + 1).zfill(4) + '-' + str(12) + '-' + str(31)
                     release_is_declared = False
-        else:
-            text = text.get_text()
+            else:
+                print('cannot get any info of ' + comic_title + '.')
+                failed_events += 'cannot get any info of ' + comic_title + '\n'
+                release_date = str(now.year + 1).zfill(4) + \
+                    '-' + str(12) + '-' + str(31)
+                release_is_declared = False
         if release_is_declared:
             s = re.split('[年月日]', text)
             release_date = s[0] + '-' + s[1] + '-' + s[2]
