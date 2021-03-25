@@ -1,12 +1,16 @@
 import datetime
 import re
 import requests
+import time
 from bs4 import BeautifulSoup
 
 from mypackage import mygoogle, myline
 
 
-def update_calendar(event, context):
+skip_title_list = ['上野さんは不器用']
+
+
+def update_calendar():
     # build service of google calendar
     service = mygoogle.build_service()
 
@@ -16,13 +20,16 @@ def update_calendar(event, context):
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
     today = str(now.year).zfill(4) + '-' + \
         str(now.month).zfill(2) + '-' + str(now.day).zfill(2)
-    message = ''
     remained_events = ''
     updated_events = ''
     new_events = ''
     failed_events = ''
+    releases_in_a_week = ''
 
     for event in events:
+        # sleep
+        time.sleep(0.5)
+
         event_date = event['start'].get('date')
         event_title = event['summary']
         event_description = event['description']
@@ -61,12 +68,13 @@ def update_calendar(event, context):
                 if text.startswith('20'):
                     release_is_vague = True
                 else:
-                    release_date = str(
-                        now.year + 1).zfill(4) + '-' + str(12) + '-' + str(31)
+                    release_date = str(now.year + 1).zfill(4) + \
+                        '-' + str(12) + '-' + str(31)
                     release_is_declared = False
             else:
                 print('cannot get any info of ' + comic_title + '.')
-                failed_events += 'cannot get any info of ' + comic_title + '\n'
+                if comic_title not in skip_title_list:
+                    failed_events += 'cannot get any info of ' + comic_title + '\n'
                 release_date = str(now.year + 1).zfill(4) + \
                     '-' + str(12) + '-' + str(31)
                 release_is_declared = False
@@ -126,14 +134,24 @@ def update_calendar(event, context):
                 print('failed to update ' + event_title)
                 failed_events += 'failed to update ' + event_title + '\n'
 
+        # check if release date is in a week
+        week_later = datetime.datetime.utcnow() + datetime.timedelta(hours=9, weeks=1)
+        week_later = str(week_later.year).zfill(4) + '-' + \
+            str(week_later.month).zfill(2) + '-' + str(week_later.day).zfill(2)
+        if today < release_date and release_date <= week_later:
+            releases_in_a_week += release_date + ' ' + event_title + '\n'
+
+    message = ''
     if remained_events:
-        message += '-- まだ買ってないんですか??? --\n' + remained_events
+        message += '-- already released --\n' + remained_events
+    if releases_in_a_week:
+        message += '-- releases of this week --\n' + releases_in_a_week
     if updated_events:
         message += '-- updated events --\n' + updated_events
     if new_events:
         message += '-- new events --\n' + new_events
     if failed_events:
-        message += '-- failure information --\n' + failed_events.strip('\n')
+        message += '-- failure information --\n' + failed_events
     if not message:
         message = '【定期】今日も順調ですね！！'
 
@@ -141,4 +159,4 @@ def update_calendar(event, context):
 
 
 if __name__ == "__main__":
-    update_calendar(0, 0)
+    update_calendar()
