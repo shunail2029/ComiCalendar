@@ -129,6 +129,5 @@ dmypy.json
 .pyre/
 
 .vscode
-.venv
 credentials.json
 googletoken.pickle
