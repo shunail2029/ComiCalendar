@@ -5,7 +5,7 @@ import time
 from bs4 import BeautifulSoup
 
 from mypackage import mygoogle, myline
-
+from mypackage.myutils import log
 
 skip_title_list = ['上野さんは不器用']
 
@@ -48,7 +48,7 @@ def update_calendar():
         url = event_description.split('\n')[2]
         r = requests.get(url)
         if not r:
-            print('failed to get info about ' + event_title + ' from ' + url)
+            log('failed to get info about ' + event_title + ' from ' + url)
             continue
 
         # parse html
@@ -72,7 +72,7 @@ def update_calendar():
                         '-' + str(12) + '-' + str(31)
                     release_is_declared = False
             else:
-                print('cannot get any info of ' + comic_title + '.')
+                log('cannot get any info of ' + comic_title + '.')
                 if comic_title not in skip_title_list:
                     failed_events += 'cannot get any info of ' + comic_title + '\n'
                 release_date = str(now.year + 1).zfill(4) + \
@@ -86,7 +86,7 @@ def update_calendar():
         text = soup.find(class_='iteminfo lead')
         text = text.get_text()
         if comic_title not in text:
-            print(comic_title + ' is different name from one in web site')
+            log(comic_title + ' is different name from one in web site')
             failed_events += comic_title + ' is different name from one in web site\n'
 
         # set prefix '?' to title
@@ -108,30 +108,30 @@ def update_calendar():
                         event_title, release_date, event_description)
                     res = mygoogle.insert_event(service, new_event)
                     if res:
-                        print('inserted ' + event_title)
+                        log('inserted ' + event_title)
                         new_events += release_date + ' ' + event_title + '\n'
                     else:
-                        print('failed to insert ' + event_title)
+                        log('failed to insert ' + event_title)
                         failed_events += 'failed to insert ' + event_title + '\n'
             else:
                 new_event = mygoogle.make_event_body(
                     event_title, release_date, event_description)
                 res = mygoogle.update_event(service, event_id, new_event)
                 if res:
-                    print('updated ' + event_title)
+                    log('updated ' + event_title)
                     updated_events += event_date + ' -> ' + release_date + ' ' + event_title + '\n'
                 else:
-                    print('failed to insert ' + event_title)
+                    log('failed to insert ' + event_title)
                     failed_events += 'failed to update ' + event_title + '\n'
         elif event_is_vague != release_is_vague or event_is_declared != release_is_declared:
             new_event = mygoogle.make_event_body(
                 event_title, release_date, event_description)
             res = mygoogle.update_event(service, event_id, new_event)
             if res:
-                print('updated ' + event_title)
+                log('updated ' + event_title)
                 updated_events += event_date + ' -> ' + release_date + ' ' + event_title + '\n'
             else:
-                print('failed to update ' + event_title)
+                log('failed to update ' + event_title)
                 failed_events += 'failed to update ' + event_title + '\n'
 
         # check if release date is in a week

@@ -1,1 +1,1 @@
-__all__ = ['mygoogle', 'myline']
+__all__ = ['mygoogle', 'myline', 'myutils']

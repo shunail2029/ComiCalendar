@@ -4,6 +4,8 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+from mypackage.myutils import log
+
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 calendar_id = os.environ['GOOGLE_CALENDAR_ID']
 
@@ -38,9 +40,9 @@ def get_event_list(service):
         singleEvents=True,
         orderBy='startTime').execute()
     if events_result:
-        print('got event list')
+        log('got event list')
     else:
-        print('failed to get event list')
+        log('failed to get event list')
     return events_result.get('items', [])
 
 
